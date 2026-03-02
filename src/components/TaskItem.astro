@@ -40,12 +40,14 @@ const { task, onToggleComplete, onDelete, onEdit } = Astro.props;
           {task.text}
         </p>
         <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-          {new Date(task.createdAt?.toDate?.() || task.createdAt).toLocaleDateString('ar-SA', {
+          {new Date(task.createdAt?.toDate?.() || task.createdAt).toLocaleDateString('ar-EG', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
+            calendar: 'gregory',
+            timeZone: 'Asia/Riyadh'
           })}
         </p>
       </div>
