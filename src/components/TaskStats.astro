@@ -1,0 +1,39 @@
+---
+// Task Statistics Component
+---
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 animate-slide-up">
+  <div class="card p-4 text-center hover-scale transition-all duration-200">
+    <div class="text-2xl font-bold text-primary-600 dark:text-primary-400" id="totalTasks">0</div>
+    <div class="text-sm text-gray-500 dark:text-gray-400">Total Tasks</div>
+  </div>
+  <div class="card p-4 text-center hover-scale transition-all duration-200">
+    <div class="text-2xl font-bold text-success-600 dark:text-success-400" id="completedTasks">0</div>
+    <div class="text-sm text-gray-500 dark:text-gray-400">Completed</div>
+  </div>
+  <div class="card p-4 text-center hover-scale transition-all duration-200">
+    <div class="text-2xl font-bold text-accent-600 dark:text-accent-400" id="pendingTasks">0</div>
+    <div class="text-sm text-gray-500 dark:text-gray-400">Pending</div>
+  </div>
+</div>
+
+<script>
+  // Update task statistics
+  function updateStats() {
+    if (window.tasks) {
+      const total = window.tasks.length;
+      const completed = window.tasks.filter(task => task.completed).length;
+      const pending = total - completed;
+      
+      const totalEl = document.getElementById('totalTasks');
+      const completedEl = document.getElementById('completedTasks');
+      const pendingEl = document.getElementById('pendingTasks');
+      
+      if (totalEl) totalEl.textContent = total;
+      if (completedEl) completedEl.textContent = completed;
+      if (pendingEl) pendingEl.textContent = pending;
+    }
+  }
+
+  // Make updateStats globally available
+  window.updateStats = updateStats;
+</script>

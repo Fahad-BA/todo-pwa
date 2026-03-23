@@ -104,7 +104,7 @@ html {
   transition: all 0.2s ease-in-out;
 }
 
-transition-all-300 {
+.transition-all-300 {
   transition: all 0.3s ease-in-out;
 }
 
@@ -307,10 +307,10 @@ transition-all-300 {
   @apply w-24 h-24 mx-auto text-gray-300 dark:text-gray-600 mb-6 opacity-50;
 }
 
-empty-state-title {
+.empty-state-title {
   @apply text-xl font-semibold text-gray-500 dark:text-gray-400 mb-2;
 }
 
-empty-state-description {
+.empty-state-description {
   @apply text-gray-400 dark:text-gray-500;
 }

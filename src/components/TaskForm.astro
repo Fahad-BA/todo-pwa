@@ -1,0 +1,74 @@
+---
+// Task Form Component
+---
+<div class="card card-glow p-6 animate-fade-in">
+  <div class="mb-4">
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-2 flex items-center">
+      <svg class="w-5 h-5 mr-2 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+      </svg>
+      Add
+    </h2>
+    <p class="text-sm text-gray-500 dark:text-gray-400">What would you like to accomplish today?</p>
+  </div>
+  
+  <form id="addTaskForm" class="space-y-4">
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+        </svg>
+      </div>
+      <input
+        type="text"
+        id="taskInput"
+        placeholder="Type your task here..."
+        class="input-field pl-10 pr-4 py-3 text-lg"
+        dir="ltr"
+        autocomplete="off"
+        autofocus
+      />
+      <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+        <span class="text-sm text-gray-400" id="charCount">0/200</span>
+      </div>
+    </div>
+    
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="btn-primary px-6 py-3 flex items-center space-x-2 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span>Add</span>
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Character counter for task input
+  function setupCharCounter(inputId, counterId, maxLength = 200) {
+    const input = document.getElementById(inputId);
+    const counter = document.getElementById(counterId);
+    
+    if (input && counter) {
+      const updateCount = () => {
+        const length = input.value.length;
+        counter.textContent = `${length}/${maxLength}`;
+        counter.className = length > maxLength * 0.9 ? 
+          'text-sm text-danger-500 font-medium' : 
+          'text-sm text-gray-400';
+      };
+      
+      input.addEventListener('input', updateCount);
+      updateCount();
+    }
+  }
+
+  // Initialize character counter when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    setupCharCounter('taskInput', 'charCount');
+  });
+</script>

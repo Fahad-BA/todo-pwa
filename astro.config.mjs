@@ -8,13 +8,16 @@ export default defineConfig({
     mode: 'standalone'
   }),
   server: {
-    port: 3000,
-    host: '0.0.0.0',
+    port: 3002,
+    host: true, // This will bind to all interfaces (0.0.0.0)
     allowedHosts: ['todo.fhidan.com']
   },
   vite: {
     optimizeDeps: {
-      include: ['pg']
+      include: ['sqlite3']
+    },
+    ssr: {
+      external: ['sqlite3']
     }
   }
 });

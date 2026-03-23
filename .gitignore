@@ -138,3 +138,10 @@ setup-postgresql.sh
 FIXES_SUMMARY.md
 README-POSTGRESQL.md
 test_fixes.py
+API_DOCUMENTATION.md
+.gitignore
+COMPREHENSIVE_TEST_REPORT.md
+comprehensive_test.py
+API_IMPROVEMENTS_SUMMARY.md
+.gitignore
+FIX_SUMMARY.md

@@ -1,0 +1,21 @@
+---
+// Empty State Component
+---
+<div class="empty-state">
+  <div class="empty-state-icon">
+    <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+      <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H6a2 2 0 00-2 2v6a2 2 0 002 2h2a1 1 0 100 2H6a4 4 0 01-4-4V5a4 4 0 014-4h5a2 2 0 012 2v6a2 2 0 01-2 2h-1a1 1 0 110-2h1V5H6v6h1a1 1 0 110 2H6a4 4 0 01-4-4V5z" clip-rule="evenodd"/>
+      <path d="M11 11a1 1 0 100 2h3a1 1 0 100-2h-3z"/>
+      <path fill-rule="evenodd" d="M11 15a1 1 0 011-1h3a1 1 0 110 2h-3a1 1 0 01-1-1zm1-5a1 1 0 100-2h3a1 1 0 110 2h-3z" clip-rule="evenodd"/>
+    </svg>
+  </div>
+  <h3 class="empty-state-title">No tasks yet!</h3>
+  <p class="empty-state-description">Start by adding a new task using the form above</p>
+  <button onclick="document.getElementById('taskInput').focus()" class="mt-4 btn-primary">
+    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+    </svg>
+    Add Your First Task
+  </button>
+</div>

@@ -1,0 +1,238 @@
+---
+// Task Edit Modal Component with state management
+---
+<div id="editModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-strong w-full max-w-md mx-4 animate-scale-in">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+          <svg class="w-5 h-5 mr-2 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+          </svg>
+          Edit Task
+        </h3>
+        <button 
+          onclick="window.taskManager?.closeEditModal()" 
+          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <form id="editTaskForm">
+        <div class="mb-6">
+          <label for="editTaskInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Task Description
+          </label>
+          <textarea
+            id="editTaskInput"
+            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none"
+            rows="3"
+            dir="ltr"
+            placeholder="Edit your task..."
+            maxlength="200"
+          ></textarea>
+          <div class="flex items-center justify-between mt-2">
+            <span class="text-xs text-gray-400" id="editCharCount">0/200</span>
+            <div class="flex items-center space-x-4">
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" id="editPriority" class="rounded border-gray-300 text-primary-500 focus:ring-primary-500">
+                <span class="text-sm text-gray-600 dark:text-gray-400">High priority</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex space-x-3 justify-end">
+          <button
+            type="button"
+            onclick="window.taskManager?.closeEditModal()"
+            class="btn-secondary"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn-primary flex items-center space-x-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>Save Changes</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg flex items-center space-x-3">
+    <svg class="w-6 h-6 animate-spin text-primary-500" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 002 14.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path></svg>
+    <span class="text-gray-700 dark:text-gray-300">Processing...</span>
+  </div>
+</div>
+
+<script>
+  // Modal functionality with performance optimizations
+  
+  // Setup character counter with debouncing
+  function setupEditCharCounter() {
+    const input = document.getElementById('editTaskInput');
+    const counter = document.getElementById('editCharCount');
+    
+    if (input && counter) {
+      let timeout;
+      const updateCount = () => {
+        const length = input.value.length;
+        counter.textContent = `${length}/200`;
+        counter.className = length > 180 ? 
+          'text-xs text-danger-500 font-medium' : 
+          'text-xs text-gray-400';
+      };
+      
+      input.addEventListener('input', (e) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(updateCount, 50); // 50ms debounce for better performance
+      });
+      
+      // Initial update
+      updateCount();
+    }
+  }
+
+  // Performance optimized modal show/hide
+  function setupModalPerformance() {
+    const editModal = document.getElementById('editModal');
+    
+    // Use requestAnimationFrame for smoother animations
+    let animationFrame;
+    
+    function showModal() {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(() => {
+        editModal.classList.remove('hidden');
+        // Force reflow to ensure smooth animation
+        editModal.offsetHeight;
+      });
+    }
+    
+    function hideModal() {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(() => {
+        editModal.classList.add('hidden');
+      });
+    }
+    
+    // Store functions for external use
+    window.modalActions = {
+      show: showModal,
+      hide: hideModal
+    };
+  }
+
+  // Loading overlay management
+  function setupLoadingOverlay() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    
+    window.showLoading = () => {
+      loadingOverlay.classList.remove('hidden');
+    };
+    
+    window.hideLoading = () => {
+      loadingOverlay.classList.add('hidden');
+    };
+  }
+
+  // Handle modal close on outside click with throttling
+  function setupModalCloseHandlers() {
+    const editModal = document.getElementById('editModal');
+    let isClosing = false;
+    
+    // Throttle click handler
+    const handleClick = (event) => {
+      if (isClosing) return;
+      
+      if (event.target === editModal) {
+        isClosing = true;
+        window.taskManager?.closeEditModal();
+        
+        setTimeout(() => {
+          isClosing = false;
+        }, 300); // Prevent rapid closing
+      }
+    };
+    
+    document.addEventListener('click', handleClick);
+    
+    // Handle escape key to close modal
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && !editModal.classList.contains('hidden')) {
+        window.taskManager?.closeEditModal();
+      }
+    };
+    
+    document.addEventListener('keydown', handleEscape);
+    
+    // Cleanup on unmount
+    return () => {
+      document.removeEventListener('click', handleClick);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }
+
+  // Performance monitoring
+  function setupPerformanceMonitoring() {
+    if (typeof performance !== 'undefined' && performance.mark) {
+      // Mark modal interactions
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'class') {
+            const modal = document.getElementById('editModal');
+            if (modal) {
+              const isHidden = modal.classList.contains('hidden');
+              if (!isHidden) {
+                performance.mark('modal-open-start');
+              } else {
+                performance.mark('modal-close-start');
+              }
+            }
+          }
+        });
+      });
+      
+      const modal = document.getElementById('editModal');
+      if (modal) {
+        observer.observe(modal, { attributes: true });
+      }
+      
+      return observer;
+    }
+  }
+
+  // Initialize all functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    setupEditCharCounter();
+    setupModalPerformance();
+    setupLoadingOverlay();
+    const cleanup = setupModalCloseHandlers();
+    const perfObserver = setupPerformanceMonitoring();
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (cleanup) cleanup();
+      if (perfObserver) perfObserver.disconnect();
+    });
+  });
+
+  // Export functions for external use
+  window.modalUtils = {
+    setupCharacterCounter: setupEditCharCounter,
+    setupModalPerformance: setupModalPerformance,
+    setupLoadingOverlay: setupLoadingOverlay
+  };
+</script>
